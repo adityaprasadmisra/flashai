@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %}FlashAI — AI Flashcard Generator{% endblock %}
+
+{% block content %}
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-content">
+
+    <div class="hero-eyebrow">
+      <span class="eyebrow-line"></span>
+      <span>AI · Local · Private</span>
+      <span class="eyebrow-line"></span>
+    </div>
+
+    <h1 class="hero-title">
+      <span class="title-line">Learn</span>
+      <span class="title-line italic">Anything</span>
+      <span class="title-line">Instantly.</span>
+    </h1>
+
+    <p class="hero-sub">
+      Paste a topic or your study notes —<br>
+      get adaptive flashcards powered by local AI.
+    </p>
+
+    <!-- ── Input Card ── -->
+    <div class="input-card">
+
+      <div class="input-header">
+        <label class="input-label" for="topic-input">WHAT DO YOU WANT TO STUDY?</label>
+        <span id="char-count" class="char-count">0 / 3000</span>
+      </div>
+
+      <textarea
+        id="topic-input"
+        class="topic-textarea"
+        placeholder="e.g. Python decorators, Operating Systems, Photosynthesis, DBMS normalization…"
+        rows="4"
+        maxlength="3000"
+      ></textarea>
+
+      <div class="chips-row">
+        <span class="chip" data-topic="Python list comprehensions">Python</span>
+        <span class="chip" data-topic="HTTP methods in REST APIs">REST APIs</span>
+        <span class="chip" data-topic="Machine Learning fundamentals">ML</span>
+        <span class="chip" data-topic="Operating Systems concepts">OS</span>
+        <span class="chip" data-topic="DNA replication process">Biology</span>
+      </div>
+
+      <!-- Count selector -->
+      <div class="count-row">
+        <span class="count-label">HOW MANY CARDS?</span>
+        <div class="count-pills">
+          <button class="count-pill" data-count="5">5<span>Quick</span></button>
+          <button class="count-pill active" data-count="10">10<span>Standard</span></button>
+          <button class="count-pill" data-count="15">15<span>Deep</span></button>
+          <button class="count-pill" data-count="20">20<span>Master</span></button>
+        </div>
+      </div>
+
+      <!-- Difficulty breakdown -->
+      <div class="diff-wrap">
+        <div class="diff-bar">
+          <div class="diff-seg seg-easy" title="Easy">
+            <span class="diff-label">EASY</span>
+            <span class="diff-num" id="count-easy">3</span>
+          </div>
+          <div class="diff-sep"></div>
+          <div class="diff-seg seg-mid" title="Medium">
+            <span class="diff-label">MEDIUM</span>
+            <span class="diff-num" id="count-medium">5</span>
+          </div>
+          <div class="diff-sep"></div>
+          <div class="diff-seg seg-hard" title="Advanced">
+            <span class="diff-label">ADVANCED</span>
+            <span class="diff-num" id="count-hard">2</span>
+          </div>
+        </div>
+        <p class="diff-note">25 % basics · 50 % intermediate · 25 % advanced</p>
+      </div>
+
+      <button id="generate-btn" class="generate-btn">
+        <span class="btn-text">Generate Flashcards</span>
+        <span class="btn-arrow">→</span>
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Error Banner ── -->
+<div id="error-banner" class="error-banner hidden">
+  <span class="error-icon">!</span>
+  <span id="error-text"></span>
+  <button onclick="dismissError()" class="error-close">×</button>
+</div>
+
+<!-- ── Loading ── -->
+<div id="loading-overlay" class="loading-overlay hidden">
+  <div class="loader-box">
+    <div class="loader-ring"></div>
+    <p class="loader-label">GENERATING</p>
+    <p class="loader-sub" id="loader-sub">Asking Llama 3 to think hard…</p>
+  </div>
+</div>
+
+<!-- ── Flashcard Section ── -->
+<section id="flashcard-section" class="fc-section hidden">
+
+  <div class="fc-top">
+    <h2 class="fc-heading">YOUR CARDS</h2>
+    <div class="fc-meta-row">
+      <span class="fc-counter">
+        <span id="current-card">1</span> / <span id="total-cards">10</span>
+      </span>
+      <span class="fc-badge" id="fc-diff-badge"></span>
+    </div>
+  </div>
+
+  <div class="fc-progress-wrap">
+    <div id="fc-progress" class="fc-progress"></div>
+  </div>
+
+  <!-- The card -->
+  <div class="fc-stage">
+    <div id="flashcard" class="flashcard">
+      <div class="fc-face fc-front">
+        <span class="face-label">QUESTION</span>
+        <p id="question-text" class="face-body"></p>
+        <span class="face-hint">click to reveal</span>
+      </div>
+      <div class="fc-face fc-back">
+        <span class="face-label">ANSWER</span>
+        <p id="answer-text" class="face-body"></p>
+        <span class="face-hint">click to flip back</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="fc-controls">
+    <button id="prev-btn" class="fc-btn" onclick="prevCard()">← PREV</button>
+    <button id="flip-btn" class="fc-btn fc-btn-flip" onclick="flipCard()">FLIP</button>
+    <button id="next-btn" class="fc-btn" onclick="nextCard()">NEXT →</button>
+  </div>
+
+  <div class="fc-restart-wrap">
+    <button class="fc-restart" onclick="restartSession()">← Start over</button>
+  </div>
+
+</section>
+
+{% endblock %}
