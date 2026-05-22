@@ -1,16 +1,9 @@
-"""
-app.py — AI Flashcard Generator
-Flask entry point: routes and request handling.
-"""
-
 from flask import Flask, render_template, request, jsonify
 from config import Config
 from utils.flashcard_generator import generate_flashcards
 
 app = Flask(__name__)
 app.config.from_object(Config)
-
-
 @app.route("/")
 def index():
     return render_template("index.html")
