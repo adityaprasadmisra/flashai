@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+vfrom flask import Flask, render_template, request, jsonify
 from config import Config
 from utils.flashcard_generator import generate_flashcards
 
@@ -7,7 +7,6 @@ app.config.from_object(Config)
 @app.route("/")
 def index():
     return render_template("index.html")
-
 
 @app.route("/generate", methods=["POST"])
 def generate():
