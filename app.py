@@ -1,4 +1,4 @@
-vfrom flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify
 from config import Config
 from utils.flashcard_generator import generate_flashcards
 
